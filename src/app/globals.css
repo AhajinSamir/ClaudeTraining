@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+@theme {
+  --color-brand-deep-purple: #460073;
+  --color-brand-purple: #a100ff;
+  --color-brand-purple-dark: #7500c0;
+  --color-brand-purple-tint: #e5ccff;
+  --color-surface-tint: #f5eeff;
+  --color-neutral-900: #0f0f1a;
+  --color-neutral-500: #4a4a5a;
+  --color-border-neutral: #e8e8f0;
+  --color-success: #00b388;
+  --color-success-text: #00875f;
+  --color-success-bg: #e6f9f4;
+  --color-warning: #ff6b35;
+  --color-warning-text: #c94f10;
+  --color-warning-bg: #fff2ec;
+  --color-error-text: #b5001f;
+  --color-error-bg: #ffedf0;
+  --color-info-text: #2a5cc7;
+  --color-info-bg: #eef4ff;
+  --color-neutral-badge-text: #4a4a5a;
+  --color-neutral-badge-bg: #f0f0f6;
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+}
