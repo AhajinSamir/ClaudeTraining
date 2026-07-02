@@ -2,25 +2,29 @@ import { createClient } from 'contentful'
 import type { EntryFieldTypes } from 'contentful'
 
 type PlanSkeleton = {
-  contentTypeId: 'plan'
+  contentTypeId: 'Plan'
   fields: {
     name: EntryFieldTypes.Symbol
-    price: EntryFieldTypes.Number
     tagline: EntryFieldTypes.Symbol
+    priceMonthlyAud: EntryFieldTypes.Integer
+    dataAllowanceGb: EntryFieldTypes.Integer
     features: EntryFieldTypes.Array<EntryFieldTypes.Symbol>
-    featured: EntryFieldTypes.Boolean
+    isPopular: EntryFieldTypes.Boolean
     ctaLabel: EntryFieldTypes.Symbol
+    sortOrder: EntryFieldTypes.Integer
   }
 }
 
 export type Plan = {
   id: string
   name: string
-  price: number
   tagline: string
+  price: number
+  dataAllowanceGb: number
   features: string[]
   featured: boolean
   ctaLabel: string
+  sortOrder: number
 }
 
 const client = createClient({
@@ -31,16 +35,19 @@ const client = createClient({
 
 export async function getPlans(): Promise<Plan[]> {
   const entries = await client.getEntries<PlanSkeleton>({
-    content_type: 'plan',
+    content_type: 'Plan',
+    order: ['fields.sortOrder'],
     limit: 3,
   })
   return entries.items.map((entry) => ({
     id: entry.sys.id,
     name: entry.fields.name,
-    price: entry.fields.price,
     tagline: entry.fields.tagline,
+    price: entry.fields.priceMonthlyAud,
+    dataAllowanceGb: entry.fields.dataAllowanceGb,
     features: entry.fields.features,
-    featured: entry.fields.featured ?? false,
+    featured: entry.fields.isPopular ?? false,
     ctaLabel: entry.fields.ctaLabel,
+    sortOrder: entry.fields.sortOrder,
   }))
 }
