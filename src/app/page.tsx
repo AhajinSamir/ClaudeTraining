@@ -1,9 +1,10 @@
 import { Suspense } from 'react'
 import { SiteHeader } from '@/components/SiteHeader'
-import { HeroSection } from '@/components/HeroSection'
-import { TrustBar } from '@/components/TrustBar'
+import { HeroSection, HeroSectionSkeleton } from '@/components/HeroSection'
+import { TrustBar, TrustBarSkeleton } from '@/components/TrustBar'
 import { PlansSection, PlansSectionSkeleton } from '@/components/PlansSection'
-import { PromoBanner } from '@/components/PromoBanner'
+import { PromoBanner, PromoBannerSkeleton } from '@/components/PromoBanner'
+import { BlogSection, BlogSectionSkeleton } from '@/components/BlogSection'
 import { SiteFooter } from '@/components/SiteFooter'
 
 export default function Home() {
@@ -11,12 +12,21 @@ export default function Home() {
     <>
       <SiteHeader />
       <main>
-        <HeroSection />
-        <TrustBar />
+        <Suspense fallback={<HeroSectionSkeleton />}>
+          <HeroSection />
+        </Suspense>
+        <Suspense fallback={<TrustBarSkeleton />}>
+          <TrustBar />
+        </Suspense>
         <Suspense fallback={<PlansSectionSkeleton />}>
           <PlansSection />
         </Suspense>
-        <PromoBanner />
+        <Suspense fallback={<PromoBannerSkeleton />}>
+          <PromoBanner />
+        </Suspense>
+        <Suspense fallback={<BlogSectionSkeleton />}>
+          <BlogSection />
+        </Suspense>
       </main>
       <SiteFooter />
     </>

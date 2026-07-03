@@ -1,8 +1,36 @@
 import Link from 'next/link'
 import { Container } from '@/components/layout/Container'
 import { AnnouncementPill } from '@/components/ui/molecules/AnnouncementPill'
+import { getHeroBanner, type HeroBanner } from '@/lib/contentful'
 
-export function HeroSection() {
+const DEFAULTS: HeroBanner = {
+  eyebrowText: '5G Now Live Nationwide',
+  headline: "Australia's fastest 5G network.",
+  subheadline: 'Flexible plans. No lock-in contracts. Cancel any time.',
+  primaryCtaLabel: 'View plans',
+  primaryCtaUrl: '/plans',
+  secondaryCtaLabel: 'Check coverage',
+  secondaryCtaUrl: '/coverage',
+}
+
+export function HeroSectionSkeleton() {
+  return (
+    <section className="bg-brand-deep-purple w-full overflow-hidden">
+      <Container>
+        <div className="relative flex items-center h-[440px]" />
+      </Container>
+    </section>
+  )
+}
+
+export async function HeroSection() {
+  let hero: HeroBanner
+  try {
+    hero = (await getHeroBanner()) ?? DEFAULTS
+  } catch {
+    hero = DEFAULTS
+  }
+
   return (
     <section className="bg-brand-deep-purple w-full overflow-hidden">
       <Container>
@@ -10,33 +38,35 @@ export function HeroSection() {
 
           {/* Left content — 55% */}
           <div className="w-[55%] flex flex-col gap-6 relative z-[2]">
-            <AnnouncementPill label="5G Now Live Nationwide" variant="dark" />
+            <AnnouncementPill label={hero.eyebrowText} variant="dark" />
 
             <h1 className="text-[52px] font-bold text-white tracking-[-0.025em] leading-[1.08]">
-              Australia&apos;s fastest<br />5G network.
+              {hero.headline}
             </h1>
 
             <p className="text-[18px] text-brand-purple-tint leading-[1.6] max-w-[480px]">
-              Flexible plans. No lock-in contracts.<br />Cancel any time.
+              {hero.subheadline}
             </p>
 
             <div className="flex items-center gap-4 mt-2">
               <Link
-                href="/plans"
+                href={hero.primaryCtaUrl}
                 className="inline-flex items-center justify-center h-[52px] px-8 rounded-lg text-base font-semibold text-white bg-brand-purple hover:bg-brand-purple-dark hover:shadow-[0_4px_20px_rgba(161,0,255,0.4)] transition-all"
               >
-                View plans
+                {hero.primaryCtaLabel}
               </Link>
-              <Link
-                href="/coverage"
-                className="inline-flex items-center justify-center h-[52px] px-7 rounded-lg text-base font-semibold text-white bg-transparent border-[1.5px] border-white/60 hover:border-white hover:bg-white/10 transition-colors"
-              >
-                Check coverage
-              </Link>
+              {hero.secondaryCtaLabel && (
+                <Link
+                  href={hero.secondaryCtaUrl}
+                  className="inline-flex items-center justify-center h-[52px] px-7 rounded-lg text-base font-semibold text-white bg-transparent border-[1.5px] border-white/60 hover:border-white hover:bg-white/10 transition-colors"
+                >
+                  {hero.secondaryCtaLabel}
+                </Link>
+              )}
             </div>
           </div>
 
-          {/* Right — SVG network illustration, inline per story spec */}
+          {/* Right — SVG network illustration */}
           <div className="absolute right-0 top-0 w-[45%] h-full flex items-center justify-end">
             <svg
               width="580"
@@ -55,17 +85,11 @@ export function HeroSection() {
                   <stop offset="100%" stopColor="#A100FF" stopOpacity="0" />
                 </radialGradient>
               </defs>
-
-              {/* Background glow */}
               <ellipse cx="340" cy="220" rx="240" ry="200" fill="url(#heroGlow)" />
-
-              {/* Concentric rings */}
               <circle cx="340" cy="220" r="180" stroke="rgba(161,0,255,0.18)" strokeWidth="1" fill="none" />
               <circle cx="340" cy="220" r="140" stroke="rgba(161,0,255,0.22)" strokeWidth="1" fill="none" />
               <circle cx="340" cy="220" r="100" stroke="rgba(161,0,255,0.28)" strokeWidth="1.5" fill="none" />
               <circle cx="340" cy="220" r="60" stroke="rgba(161,0,255,0.4)" strokeWidth="2" fill="none" />
-
-              {/* Hexagonal grid */}
               <g opacity="0.12" stroke="#E5CCFF" strokeWidth="0.8">
                 <polygon points="340,80 370,96 370,128 340,144 310,128 310,96" fill="none" />
                 <polygon points="400,112 430,128 430,160 400,176 370,160 370,128" fill="none" />
@@ -80,15 +104,11 @@ export function HeroSection() {
                 <polygon points="460,208 490,224 490,256 460,272 430,256 430,224" fill="none" />
                 <polygon points="220,144 250,160 250,192 220,208 190,192 190,160" fill="none" />
               </g>
-
-              {/* Signal arcs */}
               <path d="M 340 220 Q 290 160 340 80" stroke="rgba(161,0,255,0.5)" strokeWidth="1.5" fill="none" strokeDasharray="4 6" />
               <path d="M 340 220 Q 410 160 480 100" stroke="rgba(161,0,255,0.4)" strokeWidth="1.5" fill="none" strokeDasharray="4 6" />
               <path d="M 340 220 Q 200 180 120 130" stroke="rgba(161,0,255,0.35)" strokeWidth="1" fill="none" strokeDasharray="4 6" />
               <path d="M 340 220 Q 380 300 420 360" stroke="rgba(161,0,255,0.35)" strokeWidth="1" fill="none" strokeDasharray="4 6" />
               <path d="M 340 220 Q 260 310 200 380" stroke="rgba(161,0,255,0.3)" strokeWidth="1" fill="none" strokeDasharray="4 6" />
-
-              {/* Node dots */}
               <circle cx="340" cy="80" r="5" fill="#A100FF" opacity="0.9" />
               <circle cx="480" cy="100" r="4" fill="#7500C0" opacity="0.8" />
               <circle cx="120" cy="130" r="4" fill="#7500C0" opacity="0.7" />
@@ -97,8 +117,6 @@ export function HeroSection() {
               <circle cx="510" cy="230" r="3" fill="#E5CCFF" opacity="0.5" />
               <circle cx="150" cy="250" r="3" fill="#E5CCFF" opacity="0.5" />
               <circle cx="450" cy="150" r="3" fill="#E5CCFF" opacity="0.6" />
-
-              {/* Central tower */}
               <g transform="translate(316,188)">
                 <rect x="21" y="40" width="6" height="24" rx="1" fill="#A100FF" opacity="0.9" />
                 <rect x="14" y="37" width="20" height="5" rx="2" fill="#A100FF" />
@@ -110,8 +128,6 @@ export function HeroSection() {
                 <rect x="28" y="5" width="24" height="14" rx="4" fill="#A100FF" />
                 <text x="40" y="15.5" textAnchor="middle" fill="white" fontSize="9" fontWeight="700" fontFamily="Inter, system-ui, sans-serif">5G</text>
               </g>
-
-              {/* Central glow */}
               <circle cx="340" cy="220" r="28" fill="url(#centreGlow)" />
               <circle cx="340" cy="220" r="8" fill="#A100FF" />
               <circle cx="340" cy="220" r="4" fill="#fff" opacity="0.9" />
